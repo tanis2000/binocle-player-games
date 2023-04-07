@@ -1,0 +1,6 @@
+{
+    "Lua.completion.autoRequire": false,
+    "Lua.workspace.library": [
+        "/Users/tanis/Documents/binocle-player/assets/api"
+    ]
+}

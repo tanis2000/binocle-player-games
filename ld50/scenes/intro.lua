@@ -1,6 +1,7 @@
 local Process = require("process")
 local Game = require("scenes.game")
 local const = require("const")
+local layers = require("layers")
 local Intro = Process:extend()
 
 function Intro:new()
@@ -50,7 +51,7 @@ function Intro:update(dt)
     local y = (const.DESIGN_HEIGHT - (self.TEX_HEIGHT * scale_y)) / 2.0
 
     --io.write("x: " .. tostring(x) .. " y: " .. tostring(y) .. "\n")
-    sprite.draw(self.logo, gd_instance, x, y, viewport, 0, scale_x, scale_y, cam)
+    sprite.draw(self.logo, gd_instance, x, y, viewport, 0, scale_x, scale_y, cam, layers.BG)
 
     --io.write("input: " .. tostring(dump(input)) .. "\n")
     --io.write("input_mgr: " .. tostring(dump(input_mgr)) .. "\n")
@@ -64,7 +65,7 @@ function Intro:update(dt)
 
     local s = "Press SPACE to START"
     local width = ttfont.get_string_width(self.default_font, s)
-    ttfont.draw_string(self.default_font, s, gd_instance, (const.DESIGN_WIDTH - width)/2, 50, viewport, color.black, cam);
+    ttfont.draw_string(self.default_font, s, gd_instance, (const.DESIGN_WIDTH - width)/2, 50, viewport, color.black, cam, layers.TEXT);
 
 end
 

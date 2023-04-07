@@ -4,6 +4,7 @@ local Cat = require("en.cat")
 local Fx = require("en.fx")
 local lume = require("lib.lume")
 local const = require("const")
+local layers = require("layers")
 
 local WaveSystem = Process:extend()
 
@@ -113,19 +114,19 @@ end
 function WaveSystem:announce()
     local s = string.format("Wave %d", self.current_wave_idx)
     local width = ttfont.get_string_width(self.announce_font, s)
-    ttfont.draw_string(self.announce_font, s, gd_instance, self.x + (self.w - width)/2, self.y + (self.h - 32)/2, viewport, color.black, self.camera);
+    ttfont.draw_string(self.announce_font, s, gd_instance, self.x + (self.w - width)/2, self.y + (self.h - 32)/2, viewport, color.black, self.camera, layers.TEXT);
 end
 
 function WaveSystem:announce_done()
     local s = "Wave completed"
     local width = ttfont.get_string_width(self.announce_font, s)
-    ttfont.draw_string(self.announce_font, s, gd_instance, self.x + (self.w - width)/2, self.y + (self.h - 32)/2, viewport, color.black, self.camera);
+    ttfont.draw_string(self.announce_font, s, gd_instance, self.x + (self.w - width)/2, self.y + (self.h - 32)/2, viewport, color.black, self.camera, layers.TEXT);
 end
 
 function WaveSystem:announce_game_completed()
     local s = "You beat the game. Well done!"
     local width = ttfont.get_string_width(G.game.default_font, s)
-    ttfont.draw_string(G.game.default_font, s, gd_instance, self.x + (self.w - width)/2, self.y + (self.h - 32)/2, viewport, color.white, self.camera);
+    ttfont.draw_string(G.game.default_font, s, gd_instance, self.x + (self.w - width)/2, self.y + (self.h - 32)/2, viewport, color.white, self.camera, layers.TEXT);
 end
 
 function WaveSystem:update_position(x, y, w, h)

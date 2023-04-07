@@ -115,11 +115,11 @@ function main.local_update(dt)
     local x = (const.DESIGN_WIDTH - (main.TEX_WIDTH * scale_x)) / 2.0
     local y = (const.DESIGN_HEIGHT - (main.TEX_HEIGHT * scale_y)) / 2.0
 
-    sprite.draw(main.logo, gd_instance, x, y, viewport, 0, scale_x, scale_y, cam)
+    sprite.draw(main.logo, gd_instance, x, y, viewport, 0, scale_x, scale_y, cam, 0)
 
     local s = "Press ESC twice to QUIT"
     local width = ttfont.get_string_width(main.default_font, s)
-    ttfont.draw_string(main.default_font, s, gd_instance, (const.DESIGN_WIDTH - width)/2, 50, viewport, color.black, cam);
+    ttfont.draw_string(main.default_font, s, gd_instance, (const.DESIGN_WIDTH - width)/2, 50, viewport, color.black, cam, 0);
 
 end
 

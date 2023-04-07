@@ -1,12 +1,15 @@
 local lume = require("lib.lume")
 local const = require("const")
+---@class Object
 local Object = require("lib.classic")
 local Cooldown = require("cooldown")
 local M = require("m")
 local util = require("util")
 local layers = require("layers")
 
----@class Entity
+---@class Entity: Object
+---@field pivot_x number the horizontal pivot
+---@field pivot_y number the vertical pivot
 local Entity = Object:extend()
 
 function Entity.new(self)

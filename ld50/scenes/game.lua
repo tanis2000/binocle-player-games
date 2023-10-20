@@ -32,7 +32,7 @@ function Game:new(shd)
 
     self.debugGui = DebugGui()
 
-    self.default_font = ttfont.from_file(assets_dir .. "font/default.ttf", 8, shader.defaultShader());
+    self.default_font = ttfont.from_assets(app.assets_dir() .. "font/default.ttf", 8, shader.defaultShader());
 
     self.camera = GameCamera()
     self:add_child(self.camera)

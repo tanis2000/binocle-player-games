@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug ld50",
+            "type": "lua-local",
+            "request": "launch",
+            "program": {
+                "command": "../binocle-player/cmake-build-debug/src/binocle-player.app/Contents/MacOS/binocle-player"
+            },
+            "args": [
+                "${workspaceFolder}/ld50"
+            ]
+        },
+        {
             "name": "Debug roguelike",
             "type": "lua-local",
             "request": "launch",

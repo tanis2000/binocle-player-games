@@ -83,7 +83,7 @@ function on_init()
     audio.init(audio_instance)
     io.write("audio_instance: " .. tostring(audio_instance) .. "\n")
 
-    local music = audio.load_music(audio_instance, assets_dir .. "music/theme.mp3")
+    local music = audio.load_music_from_assets(audio_instance, app.assets_dir() .. "music/theme.mp3")
     G.musics["main"] = music
     audio.play_music(audio_instance, music)
     audio.set_music_volume(audio_instance, G.musics["main"], 0.5)
@@ -99,7 +99,7 @@ end
 
 function main.on_update(dt)
     --io.write("dt: " .. tostring(dt) .. "\n")
-    sprite_batch.begin(sb, cam, shader.defaultShader())
+    sprite_batch.begin(sb, cam, shader.defaultShader(), viewport, "BINOCLE_SPRITE_SORT_MODE_FRONT_TO_BACK")
     if not scene then
         intro = Intro()
         intro:init(shader.defaultShader())
@@ -165,7 +165,7 @@ function main.on_update(dt)
         imgui.RenderToScreen(gd_instance, win, viewport, cam)
     end
 
-    sprite_batch.finish(sb, cam)
+    sprite_batch.finish(sb, cam, viewport)
 end
 
 function on_destroy()
@@ -175,7 +175,7 @@ function on_destroy()
 end
 
 function load_sfx(name, filename)
-    local sound = audio.load_sound(audio_instance, assets_dir .. filename)
+    local sound = audio.load_sound_from_assets(audio_instance, app.assets_dir() .. filename)
     G.sounds[name] = sound
     audio.set_sound_volume(G.sounds[name], 1.0)
 end

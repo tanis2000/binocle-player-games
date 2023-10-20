@@ -11,7 +11,7 @@ G = {
     title = "Binocle Player Simple Game",
 }
 
-local assets_dir = sdl.assets_dir()
+local assets_dir = app.assets_dir()
 log.info(assets_dir .. "\n")
 log.info("Begin of main.lua\n");
 
@@ -60,7 +60,10 @@ function on_init()
 end
 
 function main.on_update(dt)
-    sprite_batch.begin(sb, cam, shader.defaultShader())
+    if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
+        DEBUGGER.pullBreakpoints()
+    end
+    sprite_batch.begin(sb, cam, shader.defaultShader(), viewport, "BINOCLE_SPRITE_SORT_MODE_FRONT_TO_BACK")
 
     if not setup_done then
         main.setup(shader.defaultShader())
@@ -77,7 +80,7 @@ function main.on_update(dt)
     main.local_update(dt)
     gd.render_screen(gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, viewport, cam)
 
-    sprite_batch.finish(sb, cam)
+    sprite_batch.finish(sb, cam, viewport)
 end
 
 function main.setup(shd)
@@ -102,7 +105,7 @@ function main.setup(shd)
 
     gd.set_offscreen_clear_color(gd_instance, 1, 1, 1, 1)
 
-    main.default_font = ttfont.from_file(assets_dir .. "font/default.ttf", 8, shader.defaultShader());
+    main.default_font = ttfont.from_assets(app.assets_dir() .. "font/default.ttf", 8, shader.defaultShader());
 
     setup_done = true
 end
@@ -117,8 +120,12 @@ function main.local_update(dt)
 
     sprite.draw(main.logo, gd_instance, x, y, viewport, 0, scale_x, scale_y, cam, 0)
 
-    local s = "Press ESC twice to QUIT"
+    local s = "Just displaying this image. Nothing else to see here :)"
     local width = ttfont.get_string_width(main.default_font, s)
+    ttfont.draw_string(main.default_font, s, gd_instance, (const.DESIGN_WIDTH - width)/2, 80, viewport, color.black, cam, 0);
+
+    s = "Press ESC twice to QUIT"
+    width = ttfont.get_string_width(main.default_font, s)
     ttfont.draw_string(main.default_font, s, gd_instance, (const.DESIGN_WIDTH - width)/2, 50, viewport, color.black, cam, 0);
 
 end

@@ -1,3 +1,9 @@
+if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
+    package.loaded["lldebugger"] = assert(loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH")))()
+    DEBUGGER = require("lldebugger")
+    DEBUGGER.start()
+end
+
 local assets_dir = app.assets_dir()
 package.path = package.path .. ";" .. assets_dir .."?.lua" .. ";?/init.lua"
 
@@ -15,6 +21,7 @@ end
 
 local function on_update_main(dt)
     call(main.on_update, dt)
+    --main.on_update(dt)
 end
 
 local function on_update_main_fn()

@@ -1,10 +1,10 @@
 local const = require("const")
 local Process = require("process")
-local map = require("maps.main")
+local map = require("map")
 local layers = require("layers")
 local lume = require("lib.lume")
 
---- @class Level
+--- @class Level: Process
 local Level = Process:extend()
 
 Level.PlatformEndLeft = 1
@@ -13,129 +13,65 @@ Level.PlatformEndRight = 2
 function Level:new()
     Level.super.new(self)
     self.name = "level"
-    self.map = map
+    self.map = map(80, 45)
     self.coll_map = {}
     self.hero_spawners = {}
     self.cat_spawners = {}
     self.mob_spawners = {}
     self.collectors = {}
     self.marks_map = {}
-    self.width = map.width
-    self.height = map.height
+    self.width = self.map.width
+    self.height = self.map.height
     self.scale = lkazmath.kmVec2New()
     self.scale.x = 1.0
     self.scale.y = 1.0
-    for idx in pairs(map.layers) do
-        local layer = map.layers[idx]
-        if layer.name == "collisions" then
-            -- Setup collisions
-            for i in pairs(layer.data) do
-                local value = layer.data[i]
-                local cy = layer.height - 1 - math.floor((i-1) / layer.width)
-                local cx = math.floor((i-1) % layer.width)
-                if value ~= 0 then
-                    --print(cx, cy)
-                    self:set_collision(cx, cy, true)
-                end
-            end
 
-            -- Setup marks
-            for cy = 0, self.map.height do
-                for cx = 0, self.map.width do
-                    if not self:has_collision(cx, cy) and self:has_collision(cx, cy-1) then
-                        if self:has_collision(cx+1, cy) or not self:has_collision(cx+1, cy-1) then
-                            self:set_mark(cx, cy, Level.PlatformEndRight)
-                        end
-                        if self:has_collision(cx-1, cy) or not self:has_collision(cx-1, cy-1) then
-                            self:set_mark(cx, cy, Level.PlatformEndLeft)
-                        end
-                    end
-                end
-            end
+    -- Setup collisions
+    for i in pairs(self.map.tiles) do
+        local tile = self.map.tiles[i]
+        local cy = self.map.height - 1 - math.floor((i-1) / self.map.width)
+        local cx = math.floor((i-1) % self.map.width)
+        if not tile.can_walk then
+            --print(cx, cy)
+            self:set_collision(cx, cy, true)
         end
-        if layer.name == "spawners" then
-            for i in pairs(layer.objects) do
-                local obj = layer.objects[i]
-                if obj.name == "hero" then
-                    local spawner = {
-                        cx = obj.x / const.GRID,
-                        cy = self.map.width - (obj.y / const.GRID),
-                    }
-                    self.hero_spawners[#self.hero_spawners+1] = spawner
-                end
-                -- if obj.name == "cat" then
-                --     local spawner = {
-                --         cx = obj.x / const.GRID,
-                --         cy = self.map.width - (obj.y / const.GRID),
-                --     }
-                --     self.cat_spawners[#self.cat_spawners+1] = spawner
-                -- end
-                -- if obj.name == "mob" then
-                --     local spawner = {
-                --         cx = obj.x / const.GRID,
-                --         cy = self.map.width - (obj.y / const.GRID),
-                --     }
-                --     self.mob_spawners[#self.mob_spawners+1] = spawner
-                -- end
-                -- if obj.name == "collector" then
-                --     local cx = obj.x / const.GRID
-                --     local cy = self.map.width - (obj.y / const.GRID)
-                --     Collector(cx, cy)
-                -- end
-            end
-        end
-        if layer.name == "interactive" then
-            for i in pairs(layer.objects) do
-                local obj = layer.objects[i]
-                -- if obj.name == "collector" then
-                --     local collector = {
-                --         cx = obj.x / const.GRID,
-                --         cy = self.map.width - (obj.y / const.GRID),
-                --     }
-                --     self.collectors[#self.collectors+1] = collector
-                -- end
-                -- if obj.name == "say" then
-                --     local s = SayMark(obj.properties["text"], obj.properties["trigger_distance"])
-                --     local cx = obj.x / const.GRID
-                --     local cy = self.map.width - (obj.y / const.GRID)
-                --     s:set_pos_grid(cx, cy)
-                -- end
-                -- if obj.name == "ship" then
-                --     local cx = obj.x / const.GRID
-                --     local cy = self.map.width - (obj.y / const.GRID)
-                --     Ship(cx, cy)
-                -- end
-            end
+        if tile.hero_spawner then
+            cy = math.floor((i-1) / self.map.width)
+            cx = math.floor((i-1) % self.map.width)
+            print("spawner at " .. tostring(cx) .. ", " .. tostring(cy))
+            local spawner = {
+                cx = cx,
+                cy = cy,
+            }
+            self.hero_spawners[#self.hero_spawners+1] = spawner
         end
     end
 
     local assets_dir = app.assets_dir()
-    for idx in pairs(self.map.tilesets) do
-        log.info("idx: " .. idx)
-        local ts = self.map.tilesets[idx]
-        local image_filename = assets_dir .. "maps/" .. ts.image
-        local img = image.load_from_assets(image_filename)
-        local tex = texture.from_image(img)
-        local mat = material.new()
-        material.set_texture(mat, tex)
-        material.set_shader(mat, shader.defaultShader())
-        self.tiles = {}
-        log.info("num tiles: " .. tostring(ts.tilecount))
-        for i = 0, ts.tilecount do
-            --log.info(tostring(i))
-            self.tiles[i] = {}
-            self.tiles[i].gid = i
-            self.tiles[i].sprite = sprite.from_material(mat)
-            local cy = math.floor(i / const.GRID)
-            local cx = math.floor(i % const.GRID)
-            local sub = subtexture.subtexture_with_texture(tex, 16 * cx, (ts.imageheight - 16) - (16 * cy), self.map.tilewidth, self.map.tileheight)
-            sprite.set_subtexture(self.tiles[i].sprite, sub)
-            sprite.set_origin(self.tiles[i].sprite, 0, 0)
-        end
-        self.tileset = {
-            sprite = sprite.from_material(mat),
-        }
+    local image_filename = assets_dir .. "maps/tileset.png"
+    local img = image.load_from_assets(image_filename)
+    local tex = texture.from_image(img)
+    local mat = material.new()
+    material.set_texture(mat, tex)
+    material.set_shader(mat, shader.defaultShader())
+    self.tiles = {}
+    local imageheight = 256
+    local tileheight = 16
+    local tilewidth = 16
+    for i = 0, 256 do
+        --log.info(tostring(i))
+        self.tiles[i] = {}
+        self.tiles[i].gid = i
+        self.tiles[i].sprite = sprite.from_material(mat)
+        local cy = math.floor(i / const.GRID)
+        local cx = math.floor(i % const.GRID)
+        local sub = subtexture.subtexture_with_texture(tex, 16 * cx, (imageheight - 16) - (16 * cy), tilewidth, tileheight)
+        sprite.set_subtexture(self.tiles[i].sprite, sub)
+        sprite.set_origin(self.tiles[i].sprite, 0, 0)
     end
+    self.tileset = {
+        sprite = sprite.from_material(mat),
+    }
 
     return self
 end
@@ -202,21 +138,29 @@ function Level:has_mark(x, y, mark)
 end
 
 function Level:render()
-    for idx in pairs(self.map.layers) do
-        local layer = self.map.layers[idx]
-        if layer.name == "collisions" or layer.name == "objects" or layer.name == "fg" then
-            for i in pairs(layer.data) do
-                --log.info(tostring(i))
-                local value = layer.data[i] - 1
-                local cy = math.floor((i-1) / layer.width)
-                local cx = math.floor((i-1) % layer.width)
-                if value ~= -1 then
-                    -- io.write("v: " .. tostring(value) .. "cx: " .. cx .. "cy: " .. cy .. "\n")
-                    sprite.draw(self.tiles[value].sprite, gd_instance, cx * const.GRID, (layer.height-1) * const.GRID - cy * const.GRID, viewport, 0, self.scale.x, self.scale.y, cam, layers.BG)
-                end
-            end
+
+
+    for i in pairs(self.map.tiles) do
+        --log.info(tostring(i))
+        local tile = self.map.tiles[i]
+        local cy = math.floor((i-1) / self.map.width)
+        local cx = math.floor((i-1) % self.map.width)
+        local value = 0
+        if tile.can_walk then
+            value = 1
+        else
+            value = 2
         end
-    end
+        if value ~= -1 then
+            -- io.write("v: " .. tostring(value) .. "cx: " .. cx .. "cy: " .. cy .. "\n")
+            sprite.draw(self.tiles[value].sprite, gd_instance, cx * const.GRID, (self.map.height-1) * const.GRID - cy * const.GRID, viewport, 0, self.scale.x, self.scale.y, cam, layers.BG)
+        end
+        if self:has_collision(cx, cy) then
+            --gd.draw_rect(gd_instance, cx * const.GRID, (self.map.height-1) * const.GRID - cy * const.GRID, const.GRID, const.GRID, color.debug_bounds, viewport, cam, layers.TEXT)
+        end
+   end
+
+
     --sprite.draw(self.tileset.sprite, gd_instance, 0, 0, viewport, 0, self.scale, camera)
     --sprite.draw(self.tiles[32].sprite, gd_instance, 0, 0, viewport, 0, self.scale, camera)
 end

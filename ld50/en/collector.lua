@@ -1,5 +1,8 @@
 local Entity = require("entity")
 local layers = require("layers")
+
+---@class Collector: Entity
+---@field super Entity
 local Collector = Entity:extend()
 
 function Collector:new(cx, cy)

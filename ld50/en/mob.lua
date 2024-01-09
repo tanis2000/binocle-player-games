@@ -3,6 +3,8 @@ local layers = require("layers")
 local lume = require("lib.lume")
 local Level = require("level")
 
+---@class Mob: Entity
+---@field super Entity
 local Mob = Entity:extend()
 
 function Mob:new()

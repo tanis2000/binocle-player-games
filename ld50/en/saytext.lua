@@ -1,5 +1,8 @@
 local Entity = require("entity")
 local layers = require("layers")
+
+---@class SayText: Entity
+---@field super Entity
 local SayText = Entity:extend()
 
 function SayText:new(owner, s)

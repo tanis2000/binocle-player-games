@@ -1,4 +1,7 @@
 local Entity = require("entity")
+
+---@class Ship: Entity
+---@field super Entity
 local Ship = Entity:extend()
 
 function Ship:new(cx, cy)

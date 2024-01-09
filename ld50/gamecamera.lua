@@ -4,8 +4,8 @@ local LPoint = require("lpoint")
 local lume = require("lib.lume")
 local const = require("const")
 
----@class GameCamera
----@type GameCamera
+---@class GameCamera: Process
+---@field super Process
 local GameCamera = Process:extend()
 
 function GameCamera:new()
@@ -123,8 +123,8 @@ function GameCamera:bump_ang(a, dist)
     self.bump_off_y = self.bump_off_y + math.sin(a) * dist
 end
 
----@field x number
----@field y number
+---@param x number
+---@param y number
 function GameCamera:bump(x, y)
     self.bump_off_x = self.bump_off_x + x
     self.bump_off_y = self.bump_off_y + y

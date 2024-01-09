@@ -4,7 +4,8 @@ local map = require("map")
 local layers = require("layers")
 local lume = require("lib.lume")
 
---- @class Level: Process
+---@class Level: Process
+---@field super Process
 local Level = Process:extend()
 
 Level.PlatformEndLeft = 1

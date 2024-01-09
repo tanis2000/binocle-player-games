@@ -2,8 +2,8 @@ local Process = require("process")
 local const = require("const")
 local layers = require("layers")
 
----@class Gui
----@type Gui
+---@class Gui: Process
+---@field super Process
 local Gui = Process:extend()
 
 function Gui:new()

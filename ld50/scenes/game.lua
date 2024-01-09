@@ -11,6 +11,8 @@ local lume = require("lib.lume")
 local DayCycle = require("daycycle")
 local WaveSystem = require("wavesystem")
 
+---@class Game: Process
+---@field super Process
 local Game = Process:extend()
 
 function Game:new(shd)
@@ -61,7 +63,7 @@ function Game:pre_update(dt)
     Game.super.pre_update(self, dt)
 
     for idx in pairs(G.entities) do
-        en = G.entities[idx]
+        local en = G.entities[idx]
         if not en.destroyed then
             en:pre_update(dt)
         end
@@ -100,7 +102,7 @@ function Game:update(dt)
 
 
     for idx in pairs(G.entities) do
-        en = G.entities[idx]
+        local en = G.entities[idx]
         if not en.destroyed then
             en:update(dt)
         end
@@ -160,7 +162,7 @@ end
 
 function Game:garbage_collect()
     for idx in lume.ripairs(G.entities) do
-        en = G.entities[idx]
+        local en = G.entities[idx]
         if en.destroyed then
             print("dispose")
             en:on_dispose()

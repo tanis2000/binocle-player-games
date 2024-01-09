@@ -3,6 +3,8 @@ local M = require("m")
 local Entity = require("entity")
 local layers = require("layers")
 
+---@class Bullet: Entity
+---@field super Entity
 local Bullet = Entity:extend()
 
 function Bullet:new(owner)

@@ -1,6 +1,5 @@
 local lume = require("lib.lume")
 local const = require("const")
----@class Object
 local Object = require("lib.classic")
 local Cooldown = require("cooldown")
 local M = require("m")
@@ -8,11 +7,12 @@ local util = require("util")
 local layers = require("layers")
 
 ---@class Entity: Object
+---@field super Object
 ---@field pivot_x number the horizontal pivot
 ---@field pivot_y number the vertical pivot
 local Entity = Object:extend()
 
-function Entity.new(self)
+function Entity:new()
     self.cx = 0
     self.cy = 0
     self.xr = 0.5
@@ -58,6 +58,7 @@ function Entity.new(self)
     self.animation = nil
     self.animation_timer = 0
     self.animation_frame = 1
+    self.frame = nil
 
     self.destroyed = false
 
@@ -125,7 +126,7 @@ function Entity.pre_update(self, dt)
     -- update AI?
 end
 
-function Entity.on_touch_wall(self)
+function Entity.on_touch_wall(self, direction)
 
 end
 
@@ -223,7 +224,7 @@ function Entity.update(self, dt)
     self:update_animation(dt)
 end
 
-function Entity.post_update(self)
+function Entity.post_update(self, dt)
     if self.sprite == nil then
         return
     end
@@ -237,8 +238,9 @@ end
 function Entity:draw_debug()
     if G.debug then
         local s = string.format("(%.0f,%.0f) (%.0f, %.0f)", self.cx, self.cy, self:get_center_x(), self:get_center_y())
-        ttfont.draw_string(G.game.default_font, s, gd_instance, self:get_center_x(), self:get_top(), viewport, color.white, cam, layers.TEXT);
-        gd.draw_rect(gd_instance, self:get_center_x(), self:get_center_y(), self.wid, self.hei, color.trans_green, viewport, cam)
+        ttfont.draw_string(G.game.default_font, s, gd_instance, self:get_center_x(), self:get_top(), viewport, color.white, cam, layers.TEXT)
+        gd.draw_rect(gd_instance, self:get_center_x(), self:get_center_y(), self.wid, self.hei, color.trans_green, viewport, cam, layers.TEXT)
+        gd.draw_rect_outline(gd_instance, self:get_attach_x(), self:get_attach_y(), 3, 3, color.debug_origin, viewport, cam, layers.TEXT)
     end
 end
 
@@ -293,8 +295,8 @@ function Entity.play_animation(self, idx, force)
     self.animation = self.animations[idx]
 
     if force or self.animation ~= self.animation then
-        self.animationTimer = self.animation.period
-        self.animationFrame = 1
+        self.animation_timer = self.animation.period
+        self.animation_frame = 1
         self.frame = lume.first(self.animation.frames)
     end
 end
@@ -387,15 +389,22 @@ function Entity.dist_case_free(self, tcx, tcy, txr, tyr)
     return M.dist(self.cx + self.xr, self.cy + self.yr, tcx + txr, tcy + tyr)
 end
 
-function Entity.can_see_through(cx, cy)
+function Entity:can_see_through(cx, cy)
     return not G.game.level:has_wall_collision(cx, cy) or self.cx == cx and self.cy == cy
 end
 
+function Entity.can_see_through_no_self(cx, cy)
+    return not G.game.level:has_wall_collision(cx, cy)
+end
+
+---@param en Entity
+---@param tcx? number
+---@param tcy? number
 function Entity:sight_check(en, tcx, tcy)
     if en then
-        return util.line(self.cx, self.cy, en.cx, en.cy, Entity.can_see_through)
+        return util.line(self.cx, self.cy, en.cx, en.cy, Entity.can_see_through, en)
     else
-        return util.line(self.cx, self.cy, tcx, tcy, Entity.can_see_through)
+        return util.line(self.cx, self.cy, tcx, tcy, Entity.can_see_through_no_self)
     end
 end
 

@@ -109,10 +109,10 @@ function LPoint:dist_case(e, pt, tcx, tcy, txr, tyr)
 end
 
 --- Distance to something else, in level pixels
----@field e Entity
----@field pt LPoint
----@field lvl_x number
----@field lvl_y number
+---@param e Entity
+---@param pt LPoint
+---@param lvl_x number
+---@param lvl_y number
 ---@return number
 function LPoint:dist_px(e, pt, lvl_x, lvl_y)
     if not lvl_x then
@@ -128,15 +128,15 @@ function LPoint:dist_px(e, pt, lvl_x, lvl_y)
     elseif pt ~= nil then
         return M.dist(self:get_level_x(), self:get_level_y(), pt:get_level_x(), pt:get_level_y())
     else
-        return M.dist(self:get_foot_x(), self:get_foot_y(), lvl_x, lvl_y)
+        return M.dist(self:get_level_x(), self:get_level_y(), lvl_x, lvl_y)
     end
 end
 
 --- Angle in radians to something else, in level pixels
----@field e Entity
----@field pt LPoint
----@field lvl_x number
----@field lvl_y number
+---@param e Entity
+---@param pt LPoint
+---@param lvl_x number
+---@param lvl_y number
 ---@return number
 function LPoint:ang_to(e, pt, lvl_x, lvl_y)
     if not lvl_x then

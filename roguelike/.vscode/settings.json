@@ -1,0 +1,6 @@
+{
+    "Lua.diagnostics.globals": [
+        "imgui",
+        "on_update"
+    ]
+}

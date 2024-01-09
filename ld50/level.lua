@@ -7,7 +7,8 @@ local SayMark = require("en.saymark")
 local Ship = require("en.ship")
 local Collector = require("en.collector")
 
---- @class Level
+--- @class Level: Process
+---@field super Process
 local Level = Process:extend()
 
 Level.PlatformEndLeft = 1
@@ -25,6 +26,7 @@ function Level:new()
     self.marks_map = {}
     self.width = map.width
     self.height = map.height
+    ---@class kmVec2
     self.scale = lkazmath.kmVec2New()
     self.scale.x = 1.0
     self.scale.y = 1.0

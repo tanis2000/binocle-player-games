@@ -3,13 +3,14 @@ local lume = require("lib.lume")
 local Object = require("lib.classic")
 
 ---@class Process: Object
+---@field super Object
 local Process = Object:extend()
 
 processes = {
     unique_id = 0
 }
 
-function Process.new(self, parent)
+function Process:new(parent)
     self.name = "process"
     self.id = 0 -- this must be unique
     self.parent = nil

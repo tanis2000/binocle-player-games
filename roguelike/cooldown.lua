@@ -1,9 +1,10 @@
 local Object = require("lib.classic")
 
----@class CooldownInstance
+---@class CooldownInstance: Object
+---@field super Object
 local CooldownInstance = Object:extend()
 
-function CooldownInstance.new(self, name, seconds, func)
+function CooldownInstance:new(name, seconds, func)
     CooldownInstance.super.new(self)
     self.name = name
     self.total = seconds
@@ -16,9 +17,10 @@ function CooldownInstance.__tostring(self)
 end
 
 ---@class Cooldown
+---@field super Object
 local Cooldown = Object:extend()
 
-function Cooldown.new(self)
+function Cooldown:new()
     Cooldown.super.new(self)
     self.cooldowns = {}
 end

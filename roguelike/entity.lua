@@ -55,6 +55,7 @@ function Entity:new()
     self.animation = nil
     self.animation_timer = 0
     self.animation_frame = 1
+    self.frame = nil
 
     self.destroyed = false
 
@@ -220,7 +221,7 @@ function Entity.update(self, dt)
     self:update_animation(dt)
 end
 
-function Entity.post_update(self)
+function Entity.post_update(self, dt)
     if self.sprite == nil then
         return
     end
@@ -238,7 +239,7 @@ end
 function Entity:draw_debug()
     if G.debug then
         local s = self:get_debug_string()
-        ttfont.draw_string(G.game.default_font, s, gd_instance, self:get_center_x(), self:get_top(), viewport, color.white, cam, layers.TEXT);
+        ttfont.draw_string(G.game.default_font, s, gd_instance, self:get_center_x(), self:get_top(), viewport, color.white, cam, layers.TEXT)
         gd.draw_rect(gd_instance, self:get_center_x(), self:get_center_y(), self.wid, self.hei, color.debug_bounds, viewport, cam, layers.TEXT)
         gd.draw_rect_outline(gd_instance, self:get_attach_x(), self:get_attach_y(), 3, 3, color.debug_origin, viewport, cam, layers.TEXT)
     end
@@ -389,15 +390,22 @@ function Entity.dist_case_free(self, tcx, tcy, txr, tyr)
     return M.dist(self.cx + self.xr, self.cy + self.yr, tcx + txr, tcy + tyr)
 end
 
-function Entity.can_see_through(cx, cy)
+function Entity:can_see_through(cx, cy)
     return not G.game.level:has_wall_collision(cx, cy) or self.cx == cx and self.cy == cy
 end
 
+function Entity.can_see_through_no_self(cx, cy)
+    return not G.game.level:has_wall_collision(cx, cy)
+end
+
+---@param en Entity
+---@param tcx number
+---@param tcy number
 function Entity:sight_check(en, tcx, tcy)
     if en then
-        return util.line(self.cx, self.cy, en.cx, en.cy, Entity.can_see_through)
+        return util.line(self.cx, self.cy, en.cx, en.cy, Entity.can_see_through, en)
     else
-        return util.line(self.cx, self.cy, tcx, tcy, Entity.can_see_through)
+        return util.line(self.cx, self.cy, tcx, tcy, Entity.can_see_through_no_self)
     end
 end
 

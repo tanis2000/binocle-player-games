@@ -1,7 +1,8 @@
 local util = {
 }
 
-function util.line(x, y, x2, y2, fn)
+---@param fn function
+function util.line(x, y, x2, y2, fn, data)
     local dx = x
     local dy = y
     local res = nil
@@ -10,7 +11,11 @@ function util.line(x, y, x2, y2, fn)
     local len = math.max(distX, distY)
 
     for i = 1, len do
-        res = fn(math.floor(dx), math.floor(dy))
+        if data ~= nil then
+            res = fn(data, math.floor(dx), math.floor(dy))
+        else
+            res = fn(math.floor(dx), math.floor(dy))
+        end
         if res then
             break
         end

@@ -6,7 +6,7 @@ local Object = require("lib.classic")
 ---@field super Object
 local Process = Object:extend()
 
-processes = {
+PROCESSES = {
     unique_id = 0
 }
 
@@ -19,8 +19,8 @@ function Process:new(parent)
     self.cd = Cooldown()
     self.elapsed_time = 0
 
-    processes.unique_id = processes.unique_id + 1
-    self.id = processes.unique_id
+    PROCESSES.unique_id = PROCESSES.unique_id + 1
+    self.id = PROCESSES.unique_id
 
     if parent ~= nil then
         parent.add_child(self)

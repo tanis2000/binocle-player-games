@@ -72,6 +72,7 @@ function on_init()
     sprite_batch.set_gd(sb, gd_instance)
 
     -- Create a viewport that corresponds to the size of our render target
+    ---@class kmVec2
     local center = lkazmath.kmVec2New();
     center.x = const.DESIGN_WIDTH / 2;
     center.y = const.DESIGN_HEIGHT / 2;

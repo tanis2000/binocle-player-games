@@ -88,7 +88,7 @@ function Game:update(dt)
 
 
     for idx in pairs(G.entities) do
-        en = G.entities[idx]
+        local en = G.entities[idx]
         if not en.destroyed then
             en:update(dt)
         end

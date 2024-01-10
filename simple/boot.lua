@@ -12,7 +12,7 @@ local delta_time = 0
 
 local function on_error(msg)
     print("msg: " .. msg .. "\n" .. traceback())
-    input.set_quit_requested(input_mgr, true)
+    input.set_quit_requested(G.input_mgr, true)
 end
 
 local function call(fn, ...)

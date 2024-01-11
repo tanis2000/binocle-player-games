@@ -1,0 +1,15 @@
+{
+    "Lua.diagnostics.globals": [
+        "imgui",
+        "on_update",
+        "on_init",
+        "on_destroy",
+        "get_window",
+        "get_adapter",
+        "get_camera",
+        "get_input_mgr",
+        "get_gd_instance",
+        "get_sprite_batch_instance",
+        "get_audio_instance"
+    ]
+}

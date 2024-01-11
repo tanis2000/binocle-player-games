@@ -1,0 +1,97 @@
+{
+	"folders": [
+		{
+			"path": "./ld50"
+		},
+		{
+			"path": "./roguelike"
+		},
+		{
+			"path": "./simple"
+		}
+	],
+	"settings": {
+		"Lua.completion.autoRequire": false,
+		"Lua.workspace.library": [
+			"/Users/tanis/Documents/binocle-player/assets/api"
+		],
+		"Lua.runtime.version": "Lua 5.1",
+		"Lua.diagnostics.globals": [
+			"imgui"
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Debug ld50",
+				"type": "lua-local",
+				"request": "launch",
+				"program": {
+					"command": "/Users/tanis/Documents/binocle-player/cmake-build-debug/src/binocle-player.app/Contents/MacOS/binocle-player",
+					"communication": "stdio"
+				},
+				"args": [
+					"${workspaceFolder:ld50}"
+				],
+				"verbose": true,
+				"stopOnEntry": false,
+				"scriptRoots": [
+					"${workspaceFolder:ld50}/",
+					"./",
+					"./ld50/"
+				],
+				"scriptFiles": [
+					"${workspaceFolder:ld50}/*.lua"
+				],
+				"pullBreakpointsSupport": true
+			},
+			{
+				"name": "Debug roguelike",
+				"type": "lua-local",
+				"request": "launch",
+				"program": {
+					"command": "/Users/tanis/Documents/binocle-player/cmake-build-debug/src/binocle-player.app/Contents/MacOS/binocle-player",
+					"communication": "stdio"
+				},
+				"args": [
+					"${workspaceFolder:roguelike}"
+				],
+				"verbose": true,
+				"stopOnEntry": false,
+				"scriptRoots": [
+					"${workspaceFolder:roguelike}/",
+					"./",
+					"./roguelike/"
+				],
+				"scriptFiles": [
+					"${workspaceFolder:roguelike}/*.lua"
+				],
+				"pullBreakpointsSupport": true
+			},
+			{
+				"name": "Debug simple",
+				"type": "lua-local",
+				"request": "launch",
+				"program": {
+					"command": "/Users/tanis/Documents/binocle-player/cmake-build-debug/src/binocle-player.app/Contents/MacOS/binocle-player",
+					"communication": "stdio"
+				},
+				"args": [
+					"${workspaceFolder:simple}"
+				],
+				"verbose": true,
+				"stopOnEntry": false,
+				"scriptRoots": [
+					"${workspaceFolder:simple}/",
+					"./",
+					"./simple/"
+				],
+				"scriptFiles": [
+					"${workspaceFolder:simple}/*.lua"
+				],
+				"pullBreakpointsSupport": true
+			}
+		]
+	}
+}

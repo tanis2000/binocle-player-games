@@ -6,7 +6,6 @@ local cache = require("cache")
 main = {}
 ---@type table
 G = {
-    cache = nil,
     entities = {}, -- all entities
     mobs = {}, -- all mobs
     cats = {}, -- all cats
@@ -88,13 +87,13 @@ function on_init()
     audio.play_music(audio_instance, music)
     audio.set_music_volume(audio_instance, G.musics["main"], 0.5)
 
-    load_sfx("jump", "sfx/jump.wav")
-    load_sfx("hurt", "sfx/hurt.wav")
-    load_sfx("shoot", "sfx/shoot.wav")
-    load_sfx("purr", "sfx/purr.wav")
-    load_sfx("meow", "sfx/meow.mp3")
-    load_sfx("pickup", "sfx/pickup.wav")
-    load_sfx("powerup", "sfx/powerup.wav")
+    main.load_sfx("jump", "sfx/jump.wav")
+    main.load_sfx("hurt", "sfx/hurt.wav")
+    main.load_sfx("shoot", "sfx/shoot.wav")
+    main.load_sfx("purr", "sfx/purr.wav")
+    main.load_sfx("meow", "sfx/meow.mp3")
+    main.load_sfx("pickup", "sfx/pickup.wav")
+    main.load_sfx("powerup", "sfx/powerup.wav")
 end
 
 function main.on_update(dt)
@@ -174,7 +173,7 @@ function on_destroy()
     end
 end
 
-function load_sfx(name, filename)
+function main.load_sfx(name, filename)
     local sound = audio.load_sound_from_assets(audio_instance, app.assets_dir() .. filename)
     G.sounds[name] = sound
     audio.set_sound_volume(G.sounds[name], 1.0)

@@ -1,5 +1,7 @@
 local Entity = require("entity")
 
+---@class SayMark: Entity
+---@field super Entity
 local SayMark = Entity:extend()
 
 function SayMark:new(text, trigger_distance)

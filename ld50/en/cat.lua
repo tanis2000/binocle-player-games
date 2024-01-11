@@ -2,6 +2,8 @@ local Entity = require("entity")
 local layers = require("layers")
 local lume = require("lib.lume")
 
+---@class Cat: Entity
+---@field super Entity
 local Cat = Entity:extend()
 
 function Cat:new()
@@ -75,7 +77,7 @@ function Cat:update(dt)
     end
 
     if self:dist_case(G.game.h) <= 3 and not self.cd:has("purr") then
-        audio.play_sound(G.sounds["purr"])
+        audio.play_sound(audio_instance, G.sounds["purr"])
         self.cd:set("purr", 5)
     end
 

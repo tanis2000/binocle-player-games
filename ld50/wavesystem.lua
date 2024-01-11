@@ -6,6 +6,8 @@ local lume = require("lib.lume")
 local const = require("const")
 local layers = require("layers")
 
+---@class WaveSystem: Process
+---@field super Process
 local WaveSystem = Process:extend()
 
 function WaveSystem:new()

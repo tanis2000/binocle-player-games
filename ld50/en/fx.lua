@@ -3,6 +3,8 @@ local M = require("m")
 local Entity = require("entity")
 local layers = require("layers")
 
+---@class Fx: Entity
+---@field super Entity
 local Fx = Entity:extend()
 
 function Fx:new(filename, frames, duration)

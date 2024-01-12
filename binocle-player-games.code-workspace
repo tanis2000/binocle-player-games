@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "./simple"
+		},
+		{
+			"path": "platformer"
 		}
 	],
 	"settings": {
@@ -43,6 +46,29 @@
 				],
 				"scriptFiles": [
 					"${workspaceFolder:ld50}/*.lua"
+				],
+				"pullBreakpointsSupport": true
+			},
+			{
+				"name": "Debug platformer",
+				"type": "lua-local",
+				"request": "launch",
+				"program": {
+					"command": "/Users/tanis/Documents/binocle-player/cmake-build-debug/src/binocle-player.app/Contents/MacOS/binocle-player",
+					"communication": "stdio"
+				},
+				"args": [
+					"${workspaceFolder:platformer}"
+				],
+				"verbose": true,
+				"stopOnEntry": false,
+				"scriptRoots": [
+					"${workspaceFolder:platformer}/",
+					"./",
+					"./platformer/"
+				],
+				"scriptFiles": [
+					"${workspaceFolder:platformer}/*.lua"
 				],
 				"pullBreakpointsSupport": true
 			},

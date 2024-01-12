@@ -1,6 +1,5 @@
 local Object = require("lib.classic")
 local DebugGui = Object:extend();
-local Cache = require("cache")
 
 function DebugGui:draw(dt)
     if not G.debug then
@@ -35,19 +34,14 @@ function DebugGui:draw(dt)
     end
     imgui.End()
 
-
     self:gamecamera()
-    self:cache()
-
     imgui.Render("debug")
 end
 
 function DebugGui:entity(en)
     imgui.TextUnformatted("Name: " .. en.name)
-    imgui.TextUnformatted(string.format("W,H: %.2f,%.2f", en.wid, en.hei))
     imgui.TextUnformatted(string.format("Pixel position: %.2f,%.2f", en.sprite_x, en.sprite_y))
     imgui.TextUnformatted(string.format("Center: %.2f,%.2f", en:get_center_x(), en:get_center_y()))
-    imgui.TextUnformatted(string.format("Left: %.2f, Right: %.2f, Top: %.2f, Bottom: %.2f", en:get_left(), en:get_right(), en:get_top(), en:get_bottom()))
     local cx = en.cx
     local res = false
     res, cx = imgui.DragFloat("cx", cx, 1, 0, 0, "%.2f", 1)
@@ -131,72 +125,6 @@ function DebugGui:gamecamera()
         _, clamp = imgui.Checkbox("Clamp to level bounds", G.game.camera.clamp_to_level_bounds)
         G.game.camera.clamp_to_level_bounds = clamp
 
-    end
-    imgui.End()
-end
-
-function DebugGui:cache()
-    if imgui.Begin("Cache") then
-        if imgui.Button("Reload All") then
-            for idx, entry in pairs(Cache.map) do
-                Cache.map[idx] = nil
-                Cache.load(idx)
-            end
-        end
-
-        imgui.SameLine()
-
-        if imgui.Button("Clear All") then
-            Cache.clear()
-        end
-
-        for idx, entry in pairs(Cache.map) do
-            if imgui.TreeNode(idx) then
-                if entry:type_of() == "image" then
-                    --imgui.Image(entry, image.get_info(entry))
-                elseif entry:type_of() == "sound" then
-                    --imgui.ProgressBar(entry:tell() / entry:getDuration())
-                    --imgui.Text(os.date("!%X", entry:tell()) .. " / " .. os.date("!%X", entry:getDuration()))
-
-                    if imgui.Button("Play") then
-                        audio.play_sound(entry)
-                    end
-
-                    imgui.SameLine()
-
-                    if imgui.Button("Pause") then
-                        --entry:pause()
-                    end
-
-                    imgui.SameLine()
-
-                    if imgui.Button("Stop") then
-                        --entry:stop()
-                    end
-                elseif entry:type_of() == "music" then
-                    --imgui.ProgressBar(entry:tell() / entry:getDuration())
-                    --imgui.Text(os.date("!%X", entry:tell()) .. " / " .. os.date("!%X", entry:getDuration()))
-
-                    if imgui.Button("Play") then
-                        audio.play_music(audio_instance, entry)
-                    end
-
-                    imgui.SameLine()
-
-                    if imgui.Button("Pause") then
-                        --entry:pause()
-                    end
-
-                    imgui.SameLine()
-
-                    if imgui.Button("Stop") then
-                        --entry:stop()
-                    end
-                end
-
-                imgui.TreePop()
-            end
-        end
     end
     imgui.End()
 end

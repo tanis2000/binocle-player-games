@@ -198,6 +198,14 @@ function get_audio_instance()
     return audio_instance
 end
 
+function get_design_width()
+    return const.DESIGN_WIDTH
+end
+
+function get_design_height()
+    return const.DESIGN_HEIGHT
+end
+
 function dump(o)
     if type(o) == 'table' then
         local s = '{ '

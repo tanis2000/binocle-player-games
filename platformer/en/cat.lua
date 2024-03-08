@@ -45,7 +45,6 @@ function Cat:update(dt)
         if self:dist_case_free(c.cx, c.cy) <= 1
                 and not self.caged
                 and G.game.day_cycle.cycle == 1
-                and not G.game.wave_system.running
                 and self.owner then
             self.owner:collect_cat()
             self.owner = nil

@@ -72,7 +72,7 @@ function Hero:update(dt)
     if self:is_alive() and input.is_key_pressed(input_mgr, key.KEY_W) then
         if self:on_ground() then
             self.dy = 0.9
-            audio.play_sound(audio_instance, G.sounds["jump"])
+            audio.play_sound(G.sounds["jump"])
             local fx = Fx("data/img/jump.png", 6, 0.3)
             fx:set_pos_pixel(self:get_center_x(), self:get_bottom())
         end
@@ -124,20 +124,20 @@ function Hero.shoot(self)
             if c.owner == self then
                 c:launch(self.dir)
                 self.cd:set("shoot", 0.15)
-                audio.play_sound(audio_instance, G.sounds["meow"])
+                audio.play_sound(G.sounds["meow"])
                 return
             end
         end
     end
     local b = Bullet(self)
     self.cd:set("shoot", 0.15)
-    audio.play_sound(audio_instance, G.sounds["shoot"])
+    audio.play_sound(G.sounds["shoot"])
 end
 
 function Hero.add_cat(self)
     if self.cats < self.max_cats then
         self.cats = self.cats + 1
-        audio.play_sound(audio_instance, G.sounds["pickup"])
+        audio.play_sound(G.sounds["pickup"])
     end
 end
 
@@ -150,7 +150,7 @@ end
 function Hero.collect_cat(self)
     self:heal(self.cats * 7)
     self.cats = 0
-    audio.play_sound(audio_instance, G.sounds["powerup"])
+    audio.play_sound(G.sounds["powerup"])
     self:say("Wow! I've got 7 lives back with this!")
 end
 
@@ -204,7 +204,7 @@ function Hero:hurt(amount)
         G.game.camera:shake(2, 0.3)
         self:bump(-self.dir * 0.4, -0.15)
     else
-        audio.play_sound(audio_instance, G.sounds["hurt"])
+        audio.play_sound(G.sounds["hurt"])
         self.cd:set("hurt", 0.2)
     end
 end

@@ -1,6 +1,9 @@
 local Entity = require("entity")
+local Bullet = require("en.bullet")
+local Fx = require("en.fx")
 local layers = require("layers")
 local lume = require("lib.lume")
+local SayText = require("en.saytext")
 
 ---@class Hero: Entity
 ---@field super Entity
@@ -10,57 +13,76 @@ function Hero:new()
     Hero.super.new(self)
     self.name = "hero"
     self.hei = 16
-    self.wid = 16
+    self.wid = 12
     self.depth = layers.HERO
     self.max_cats = 1
     self.cats = 0
     self.max_health = 100
     self.health = 100
+    self.climbing = false
     self.cats_seen = 0
     self.cats_sentences = {
         "Hmmm... a cat... maybe I can pick it up",
         "More cats, I wonder what they are doing here...",
         "Maybe I can do something with them"
     }
-    self:load_image("data/img/dejavu10x10_gs_tc.png", 10, 10)
-    self:add_animation("idle", {
-        11,
+    self:load_image("data/img/hero.png", 32, 32)
+    self:add_animation("idle1", {
+        1,
     }, 8)
-    self.target_cx = self.cx
-    self.target_cy = self.cy
-    self.target_cd = 0
+    self:add_animation("idle2", {
+        2,
+        3,
+    }, 8)
+    self:add_animation("run", {
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+    }, 14)
+    self:add_animation("jumpup", {
+        10,
+    }, 14)
+    self:add_animation("jumpdown", {
+        11,
+    }, 14)
+    self:add_animation("shoot", {
+        12,
+        13,
+    }, 8)
+    self:add_animation("death", {
+        14,
+        15,
+    }, 8, false)
 end
 
 function Hero:update(dt)
     Hero.super.update(self, dt)
-    self:animate(dt)
 
     local spd = 2
     if self:is_alive() and (input.is_key_pressed(input_mgr, key.KEY_LEFT) or input.is_key_pressed(input_mgr, key.KEY_A)) then
-        self.target_cx = math.floor(self.cx - 1)
         self.dx = self.dx - spd * dt * self.time_mul
         self.dir = -1
-        -- if self:on_ground() then
-        --     self.dy = 0.2
-        -- end
     elseif self:is_alive() and (input.is_key_pressed(input_mgr, key.KEY_RIGHT) or input.is_key_pressed(input_mgr, key.KEY_D)) then
-        self.target_cx = math.floor(self.cx + 1)
         self.dx = self.dx + spd * dt * self.time_mul
         self.dir = 1
-        -- if self:on_ground() then
-        --     self.dy = 0.2
-        -- end
     end
 
     if self:is_alive() and input.is_key_pressed(input_mgr, key.KEY_W) then
-        self.dy = self.dy + spd * dt * self.time_mul
-        -- if self:on_ground() then
-        --     self.dy = 0.9
-        -- end
-    end
-
-    if self:is_alive() and input.is_key_pressed(input_mgr, key.KEY_S) then
-        self.dy = self.dy - spd * dt * self.time_mul
+        if G.game.level:has_ladder(self.cx, self.cy) then
+            self.climbing = true
+            self.dy = 0.1
+        elseif self.climbing and not G.game.level:has_ladder(self.cx, self.cy + 1) and not G.game.level:has_collision(self.cx, self.cy + 1) then
+            self.climbing = false
+            self.dy = 0.5
+        elseif self:on_ground() and not self.climbing then
+            self.dy = 0.9
+            audio.play_sound(G.sounds["jump"])
+            local fx = Fx("data/img/jump.png", 6, 0.3)
+            fx:set_pos_pixel(self:get_center_x(), self:get_bottom())
+        end
     end
 
     if self:is_alive() and input.is_key_pressed(input_mgr, key.KEY_E) then
@@ -100,32 +122,23 @@ function Hero:update(dt)
     end
 end
 
-function Hero:animate(dt)
-    if self.dx == 0 and self:on_ground() then
-        if self.target_cx ~= self.cx then
-            --self:set_pos_grid(self.target_cx, self.cy)
-        end
-    end
-end
-
 function Hero:post_update(dt)
     Hero.super.post_update(self, dt)
 end
-
 function Hero.shoot(self)
-    -- if self.cats > 0 then
-    --     for _, c in pairs(G.cats) do
-    --         if c.owner == self then
-    --             c:launch(self.dir)
-    --             self.cd:set("shoot", 0.15)
-    --             audio.play_sound(G.sounds["meow"])
-    --             return
-    --         end
-    --     end
-    -- end
-    -- local b = Bullet(self)
-    -- self.cd:set("shoot", 0.15)
-    -- audio.play_sound(audio_instance, G.sounds["shoot"])
+    if self.cats > 0 then
+        for _, c in pairs(G.cats) do
+            if c.owner == self then
+                c:launch(self.dir)
+                self.cd:set("shoot", 0.15)
+                audio.play_sound(G.sounds["meow"])
+                return
+            end
+        end
+    end
+    local b = Bullet(self)
+    self.cd:set("shoot", 0.15)
+    audio.play_sound(G.sounds["shoot"])
 end
 
 function Hero.add_cat(self)
@@ -160,17 +173,17 @@ function Hero.is_shooting(self)
 end
 
 function Hero.say(self, s)
-    -- print("saying "..s)
-    -- self:clear_saying()
-    -- SayText(self, s)
+    print("saying "..s)
+    self:clear_saying()
+    SayText(self, s)
 end
 
 function Hero.clear_saying(self)
-    -- for _, en in pairs(G.entities) do
-    --     if en.owner and en.owner == self and en:is(SayText) then
-    --         en:kill()
-    --     end
-    -- end
+    for _, en in pairs(G.entities) do
+        if en.owner and en.owner == self and en:is(SayText) then
+            en:kill()
+        end
+    end
 end
 
 function Hero.see_cats(self)
@@ -208,8 +221,8 @@ function Hero:is_alive()
 end
 
 function Hero:on_land()
-    -- local fx = Fx("data/img/land.png", 6, 0.3)
-    -- fx:set_pos_pixel(self:get_center_x(), self:get_bottom())
+    local fx = Fx("data/img/land.png", 6, 0.3)
+    fx:set_pos_pixel(self:get_center_x(), self:get_bottom())
 end
 
 function Hero:__tostring()

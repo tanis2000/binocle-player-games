@@ -1,6 +1,7 @@
 local Entity = require("entity")
 local layers = require("layers")
 local lume = require("lib.lume")
+local const= require("const")
 
 ---@class Hero: Entity
 ---@field super Entity
@@ -22,9 +23,9 @@ function Hero:new()
         "More cats, I wonder what they are doing here...",
         "Maybe I can do something with them"
     }
-    self:load_image("data/img/dejavu10x10_gs_tc.png", 10, 10)
+    self:load_image("data/img/16x16_sb_ascii.png", 16, 16)
     self:add_animation("idle", {
-        11,
+        177,
     }, 8)
     self.target_cx = self.cx
     self.target_cy = self.cy
@@ -98,6 +99,7 @@ function Hero:update(dt)
             self:play_animation("idle1")
         end
     end
+    self:play_animation("idle")
 end
 
 function Hero:animate(dt)
@@ -105,6 +107,12 @@ function Hero:animate(dt)
         if self.target_cx ~= self.cx then
             --self:set_pos_grid(self.target_cx, self.cy)
         end
+    end
+end
+
+function Hero:step(direction)
+    if direction == 1 then
+        self.target_x = (self.cx + 1) * const.GRID
     end
 end
 

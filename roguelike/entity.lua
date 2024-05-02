@@ -133,15 +133,15 @@ end
 
 function Entity.on_pre_step_x(self)
     -- Right collision
-    if self.has_collisions and self.xr > 0.8 and G.game.level:has_wall_collision(self.cx+1, self.cy) then
+    if self.has_collisions and self.xr > 0.5 and G.game.level:has_wall_collision(self.cx+1, self.cy) then
         self:on_touch_wall(1)
-        self.xr = 0.8
+        self.xr = 0.5
     end
 
     -- Left collision
-    if self.has_collisions and self.xr < 0.2 and G.game.level:has_wall_collision(self.cx-1, self.cy) then
+    if self.has_collisions and self.xr < 0.5 and G.game.level:has_wall_collision(self.cx-1, self.cy) then
         self:on_touch_wall(-1)
-        self.xr = 0.2
+        self.xr = 0.5
     end
 end
 
@@ -152,12 +152,12 @@ function Entity.on_pre_step_y(self)
         self.yr = 0
         self.bdx = self.bdx * 0.5
         self.bdy = 0
-        self:on_land()
+        --self:on_land()
     end
 
     -- Up
-    if self.has_collisions and self.yr > 0.5 and G.game.level:has_wall_collision(self.cx, self.cy + 1) then
-        self.yr = 0.5
+    if self.has_collisions and self.yr > 0 and G.game.level:has_wall_collision(self.cx, self.cy + 1) then
+        self.yr = 0
     end
 end
 

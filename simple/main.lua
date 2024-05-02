@@ -180,4 +180,12 @@ function get_audio_instance()
     return G.audio_instance
 end
 
+function get_design_width()
+    return const.DESIGN_WIDTH
+end
+
+function get_design_height()
+    return const.DESIGN_HEIGHT
+end
+
 io.write("End of main.lua\n")

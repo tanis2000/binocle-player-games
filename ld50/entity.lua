@@ -239,8 +239,8 @@ function Entity:draw_debug()
     if G.debug then
         local s = string.format("(%.0f,%.0f) (%.0f, %.0f)", self.cx, self.cy, self:get_center_x(), self:get_center_y())
         ttfont.draw_string(G.game.default_font, s, gd_instance, self:get_center_x(), self:get_top(), viewport, color.white, cam, layers.TEXT)
-        gd.draw_rect(gd_instance, self:get_center_x(), self:get_center_y(), self.wid, self.hei, color.trans_green, viewport, cam, layers.TEXT)
-        gd.draw_rect_outline(gd_instance, self:get_attach_x(), self:get_attach_y(), 3, 3, color.debug_origin, viewport, cam, layers.TEXT)
+        gd.draw_rect(gd_instance, self:get_center_x(), self:get_center_y(), self.wid, self.hei, color.debug_bounds, viewport, cam)
+        gd.draw_rect_outline(gd_instance, self:get_attach_x(), self:get_attach_y(), 3, 3, color.debug_origin, viewport, cam)
     end
 end
 

@@ -29,7 +29,8 @@ log.info("Begin of main.lua\n");
 color.azure = color.new(192.0 / 255.0, 1.0, 1.0, 1.0)
 color.white = color.new(1.0, 1.0, 1.0, 1.0)
 color.black = color.new(0, 0, 0, 1.0)
-color.trans_green = color.new(0, 1, 0, 0.5)
+color.debug_bounds = color.new(0, 1, 0, 0.2)
+color.debug_origin = color.new(0, 1, 0, 0.7)
 
 local quit_requests = 0
 ---@class Intro
@@ -159,10 +160,16 @@ function main.on_update(dt)
         audio.update_music_stream(audio_instance, music)
     end
 
+    local screenViewport = viewport_adapter.get_viewport(adapter)
+    gd.begin_screen_pass(gd_instance, win)
+    gd.apply_viewport(screenViewport)
     gd.render_screen(gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, viewport, cam)
     if G.debug then
-        imgui.RenderToScreen(gd_instance, win, viewport, cam)
+        imgui.SetContext("debug")
+        imgui.RenderToScreen("debug", gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, viewport, cam, false)
     end
+    gd.end_screen_pass()
+    gd.commit()
 
     sprite_batch.finish(sb, cam, viewport)
 end

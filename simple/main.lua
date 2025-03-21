@@ -87,7 +87,13 @@ function main.on_update(dt)
     end
 
     main.local_update(dt)
+
+    local screenViewport = viewport_adapter.get_viewport(G.adapter)
+    gd.begin_screen_pass(G.gd_instance, G.win)
+    gd.apply_viewport(screenViewport)
     gd.render_screen(G.gd_instance, G.win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, G.viewport, G.cam)
+    gd.end_screen_pass()
+    gd.commit()
 
     sprite_batch.finish(G.sb, G.cam, G.viewport)
 end

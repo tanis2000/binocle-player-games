@@ -135,15 +135,19 @@ function main.on_update(dt)
     end
 
     local screenViewport = viewport_adapter.get_viewport(adapter)
+    gd.begin_screen_pass(gd_instance, win)
+    gd.apply_viewport(screenViewport)
     gd.render_screen(gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, screenViewport, cam)
     if G.debug then
         imgui.SetContext("debug")
-        imgui.RenderToScreen("debug", gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, screenViewport, cam)
+        imgui.RenderToScreen("debug", gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, screenViewport, cam, false)
     end
     if G.using_game_gui then
         imgui.SetContext("game")
-        imgui.RenderToScreen("game", gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, screenViewport, cam)
+        imgui.RenderToScreen("game", gd_instance, win, const.DESIGN_WIDTH, const.DESIGN_HEIGHT, screenViewport, cam, true)
     end
+    gd.end_screen_pass()
+    gd.commit()
 
     sprite_batch.finish(sb, cam, viewport)
 end

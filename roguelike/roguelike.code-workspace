@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"luahelper.base.rootdir": "../../binocle-player/assets/api/",
+		"Lua.workspace.library": [
+			"/Users/tanis/Documents/binocle-player/assets/api"
+		],
+		"Lua.diagnostics.libraryFiles": "Enable",
+		"Lua.diagnostics.globals": [
+			"imgui"
+		],
+		"Lua.runtime.version": "Lua 5.1",
+		"Lua.workspace.userThirdParty": [
+			"/Users/tanis/Documents/binocle-player/assets/api"
+		]
+	}
+}
